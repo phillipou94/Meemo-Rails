@@ -71,6 +71,33 @@ class Api::GroupsController < Api::ApiController
 		
 	end 
 
+	def leave_group
+		group = Group.find_by_id(params[:group][:group_id])
+		if group
+			relationship = UserGroup.where(:user_id => @current_user.id).where(:group_id => group.id).first
+			if relationship
+				relationship.destroy
+				render status: 200, json: {
+			    	message:"Successfully Left Group: "+group.name,
+			    	response: {
+			      		id: group.id,
+			      		name: group.name
+			    	}
+			    
+			  	}.to_json
+			else 
+				render status: 500, json: {
+			    	errors: "Failed to Leave Group"
+			  	}.to_json
+			end 
+		else 
+			render status: 500, json: {
+			    errors: "Couldn't Find User Group Combination"
+			}.to_json
+		end 	
+
+	end 
+
 	private
 		def group_params
 			params.require("group").permit(:name)

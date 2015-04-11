@@ -53,14 +53,6 @@ class User < ActiveRecord::Base
 	    relationship.user_id = self.id
 	    relationship.save
 	end
-'''
-	def leave_group(group)
-		relationship = UserGroup.where(:user_id => self.id AND :server_id => group.id)
-		if relationship.destroy
 
-		else 
 
-		end 
-	end 
-'''
 end
