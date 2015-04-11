@@ -1,0 +1,52 @@
+class Api::SessionsController < Api::ApiController
+	skip_before_filter :authenticate_user_from_token!, :only => [:login,:logout] #skip checking token when creating signing in
+
+	#login
+	def login
+    	inputted_password = params[:session][:password]
+    	user_email = params[:session][:email]
+    	user = User.find_by(email: user_email)
+	    if user && BCrypt::Engine.hash_secret(inputted_password, user.salt) == user.encrypted_password
+	    	render status: 200, json: {
+		        message:"Successfully Logged In",
+		        response: {
+		          name: user.name,
+		          email: user.email,
+		          id: user.id,
+		          authentication_token: user.authentication_token
+		        }
+		        
+		      }.to_json
+	    else
+	    	render json: { errors: "Invalid email or password" }, status: 422
+	    end
+  	end
+
+  	def logout
+  		user_auth_token = request.headers["API-TOKEN"].presence
+  		user = User.where(authentication_token: user_auth_token).first
+  		if user 
+  			new_token = SecureRandom.urlsafe_base64(25).tr('lIO0', 'sxyz')
+  			if user.update_attribute(:authentication_token, new_token)
+  				render status: 200, json: {
+			        message:"Logout Successful",
+			        response: {
+			          name: user.name,
+			          email: user.email,
+			          id: user.id,
+			          authentication_token: user.authentication_token
+			        }
+			        
+			    }.to_json
+			else 
+				render json: { errors: "Can't Logout" }, status: 422
+
+			end 
+		else 
+			render json: { errors: "Can't Find User" }, status: 422
+		end 
+		
+  	end 
+  	
+
+end
