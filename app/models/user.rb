@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+	has_many :user_groups, :class_name => 'UserGroup'
+	has_many :groups, :through => :user_groups
 	
 	EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
 	validates :email, :presence => true, uniqueness: true, :format => EMAIL_REGEX
@@ -43,4 +45,22 @@ class User < ActiveRecord::Base
   	def reset_authentication_token!
     	self.authentication_token = generate_authentication_token
   	end
+
+  	'''GROUPS '''
+  	def enter_group(group)
+	    relationship = UserGroup.new
+	    relationship.group_id = group.id
+	    relationship.user_id = self.id
+	    relationship.save
+	end
+'''
+	def leave_group(group)
+		relationship = UserGroup.where(:user_id => self.id AND :server_id => group.id)
+		if relationship.destroy
+
+		else 
+
+		end 
+	end 
+'''
 end

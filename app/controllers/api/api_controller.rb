@@ -7,7 +7,7 @@ module Api #what this module will be called
 		    user_auth_token = request.headers["API-TOKEN"].presence	#this will require tokens on headers
 		    user = User.where(authentication_token: user_auth_token).first	#find user with that authenticadtion token
 		    if user && Devise.secure_compare(user.authentication_token, user_auth_token)
-		      #sign in user
+		      #set @current_user as global variable
 		      @current_user = user
 		    else 
 		    	render status: 500, json: {
@@ -16,7 +16,27 @@ module Api #what this module will be called
 
 		    end
 		
-		end 
-		
-	end 
+		end
+
+		def current_user
+			if @current_user 
+				render status: 200, json: {
+			        message:"Logged In",
+			        response: {
+			          name: @current_user.name,
+			          email: @current_user.email,
+			          id: @current_user.id,
+			          authentication_token: @current_user.authentication_token
+			        }
+			        
+			      }.to_json
+			else 
+				render status: 500, json: {
+        			errors: "Invalid Token"
+      			}.to_json
+
+			end 
+			
+		end
+	end  
 end 

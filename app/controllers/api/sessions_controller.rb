@@ -1,5 +1,5 @@
 class Api::SessionsController < Api::ApiController
-	skip_before_filter :authenticate_user_from_token!, :only => [:login,:logout] #skip checking token when creating signing in
+	skip_before_filter :authenticate_user_from_token!, :only => [:login] #skip checking token when creating signing in
 
 	#login
 	def login
@@ -23,18 +23,16 @@ class Api::SessionsController < Api::ApiController
   	end
 
   	def logout
-  		user_auth_token = request.headers["API-TOKEN"].presence
-  		user = User.where(authentication_token: user_auth_token).first
-  		if user 
+  		if @current_user 
   			new_token = SecureRandom.urlsafe_base64(25).tr('lIO0', 'sxyz')
-  			if user.update_attribute(:authentication_token, new_token)
+  			if @current_user.update_attribute(:authentication_token, new_token)
   				render status: 200, json: {
 			        message:"Logout Successful",
 			        response: {
-			          name: user.name,
-			          email: user.email,
-			          id: user.id,
-			          authentication_token: user.authentication_token
+			          name: @current_user.name,
+			          email: @current_user.email,
+			          id: @current_user.id,
+			          authentication_token: @current_user.authentication_token
 			        }
 			        
 			    }.to_json
