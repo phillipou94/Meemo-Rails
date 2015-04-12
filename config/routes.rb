@@ -8,6 +8,8 @@ Rails.application.routes.draw do
     get "/groups/:id/users" => "groups#show_users"
     post "/groups/invite" => "groups#invite_user"
     post "/groups/leave" => "groups#leave_group"
+
+    post "/upload_file" => "file_uploader#upload"
   end 
 
 end

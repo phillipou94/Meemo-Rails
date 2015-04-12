@@ -27,7 +27,7 @@ gem 'bcrypt-ruby', :require => 'bcrypt'
 gem 'devise', '~> 3.4.1'
 gem 'rename'
 
-gem 'aws-sdk', '~> 2'
+gem 'aws-sdk', '~> 1'
 gem "figaro"	#for storing secure keys and env variables
 
 # Use ActiveModel has_secure_password
