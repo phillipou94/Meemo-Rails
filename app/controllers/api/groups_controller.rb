@@ -106,6 +106,21 @@ class Api::GroupsController < Api::ApiController
 
 	end 
 
+	def get_posts
+		group = Group.find_by_id(params[:id])
+		if group
+			render status: 200, json: {
+		    	message:"Found Posts",
+		    	response: group.posts 
+			}.to_json
+		else 
+			render status: 500, json: {
+			    errors: "Couldn't Find Group"
+			}.to_json
+
+		end 
+	end 
+
 	def get_group_from_people
 		groups = @current_user.groups
 		people_ids = params[:people_ids]	#must include current_user id

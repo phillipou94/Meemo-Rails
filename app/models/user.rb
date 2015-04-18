@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 	has_many :user_groups, :class_name => 'UserGroup'
 	has_many :groups, :through => :user_groups
+	has_many :posts
 	
 	EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
 	validates :email, :presence => true, uniqueness: true, :format => EMAIL_REGEX

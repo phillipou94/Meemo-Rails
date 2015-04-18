@@ -42,6 +42,20 @@ class Api::UsersController < Api::ApiController
 		end 
 	end 
 
+	def get_posts
+		if @current_user
+			render status: 200, json: {
+				message: "Found Posts",
+				response: @current_user.posts
+			}.to_json
+		else 
+		  render status: 500, json: {
+		    errors: "Not Logged In"
+		  }.to_json
+
+		end 
+	end 
+
 
 	private
 
