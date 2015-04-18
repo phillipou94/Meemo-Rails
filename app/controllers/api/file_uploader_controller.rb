@@ -11,7 +11,7 @@ class Api::FileUploaderController < ApplicationController
 	    render status: 200, json: {
 		    message:"Upload Successful",
 		    response: {
-		      url:url,
+		      url:url
 		    }
 		    
 		  }.to_json

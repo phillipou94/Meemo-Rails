@@ -2,16 +2,24 @@ class Api::GroupsController < Api::ApiController
 
 	def create
 		new_group = Group.new(group_params)
+		member_ids = params[:group][:user_ids] #include @current_user id
 		if new_group.save
+		  member_ids.each do |user_id|
+		  	relationship = UserGroup.new
+	    	relationship.group_id = new_group.id
+	    	relationship.user_id = user_id
+	    	relationship.save
+		  end 	
 		  render status: 200, json: {
 		    message:"New Group Created",
 		    response: {
 		      id: new_group.id,
 		      name: new_group.name,
+		      members: secure_users(new_group)
 		    }
 		    
 		  }.to_json
-		  @current_user.enter_group(new_group)
+		  
 
 		else
 		  render status: 500, json: {
@@ -98,6 +106,38 @@ class Api::GroupsController < Api::ApiController
 
 	end 
 
+	def get_group_from_people
+		groups = @current_user.groups
+		people_ids = params[:people_ids]	#must include current_user id
+		groups.each do |group|
+			user_ids = Array.new
+			group.users.each do |user|
+				user_ids.push(user.id)
+				if !people_ids.include?(user.id)
+					break
+				end
+			end  
+			if user_ids.uniq.sort == people_ids.uniq.sort
+				render status: 200, json: {
+			    	message:"These People are in Group: "+group.name,
+			    	response: {
+			      		id: group.id,
+			      		name: group.name
+			    	}
+			    
+			  	}.to_json
+			  	return
+			end 
+
+		end 
+
+		render status: 201, json: {
+	    	message:"These People Do Not Belong to an Existing Group"
+	  	}.to_json
+
+	end 
+
+
 	private
 		def group_params
 			params.require("group").permit(:name)
@@ -115,4 +155,6 @@ class Api::GroupsController < Api::ApiController
 		def user_in_group?(user,group)
 			return UserGroup.where(:user_id=>user.id).where(:group_id=>group.id).any?
 		end 
+
+
 end
