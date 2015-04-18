@@ -29,7 +29,7 @@ class Api::GroupsController < Api::ApiController
 	end
 
 	def show_users
-		group = Group.find_by_id(params[:id])
+		group = Group.find_by(id: params[:id])
 		
 		if group
 		  members = secure_users(group)	#ensures that tokens and salts don't get revealed
@@ -52,8 +52,8 @@ class Api::GroupsController < Api::ApiController
 
 	#{invitation:{group_id:1,user_id:1}}
 	def invite_user
-		group = Group.find_by_id(params[:invitation][:group_id])	
-		user = User.find_by_id(params[:invitation][:user_id])
+		group = Group.find_by(id: params[:invitation][:group_id])	
+		user = User.find_by(id: params[:invitation][:user_id])
 		if user && group 
 			if !user_in_group?(user,group)
 				user.enter_group(group)
@@ -80,7 +80,7 @@ class Api::GroupsController < Api::ApiController
 	end 
 
 	def leave_group
-		group = Group.find_by_id(params[:group][:group_id])
+		group = Group.find_by(id: params[:group][:group_id])
 		if group
 			relationship = UserGroup.where(:user_id => @current_user.id).where(:group_id => group.id).first
 			if relationship
@@ -107,7 +107,7 @@ class Api::GroupsController < Api::ApiController
 	end 
 
 	def get_posts
-		group = Group.find_by_id(params[:id])
+		group = Group.find_by(id: params[:id])
 		if group
 			render status: 200, json: {
 		    	message:"Found Posts",
