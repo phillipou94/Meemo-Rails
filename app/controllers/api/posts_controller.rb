@@ -2,6 +2,10 @@ class Api::PostsController < Api::ApiController
 	def create
 		new_post = Post.new(post_params)
 		if new_post.save 
+			group = Group.find_by(id:new_post.group_id)
+			if group 
+				group.update_attribute(:last_post_type,new_post.post_type)
+			end 
 			render status: 200, json: {
 		    message:"Successfully Posted",
 		    response: new_post
@@ -15,7 +19,7 @@ class Api::PostsController < Api::ApiController
 	end 
 
 	def destroy
-		post = params.find_by(id: params[:id])
+		post = Post.find_by(id: params[:id])
 		if post.destroy
 			render status: 200, json: {
 		    	message:"Post Destroyed"
@@ -31,7 +35,7 @@ class Api::PostsController < Api::ApiController
 
 	def search
 		search_string = "%" + params[:search] + "%"
-		posts = @current_user.posts.includes(:title, :content)
+		posts = @current_user.posts
 		result = posts.where('title LIKE ? OR content LIKE ?',search_string,search_string)
 		render status: 200, json: {
 		    message:"Successfully Searched",

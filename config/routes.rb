@@ -18,7 +18,7 @@ Rails.application.routes.draw do
     post "/upload_file" => "file_uploader#upload"
 
     resources :posts, only: [:create,:destroy]
-    get "/posts/search" => "posts#search"
+    get "/posts/query" => "posts#search"
 
 
   end 
