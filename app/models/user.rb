@@ -4,9 +4,10 @@ class User < ActiveRecord::Base
 	has_many :posts
 	
 	EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
-	validates :email, :presence => true, uniqueness: true, :format => EMAIL_REGEX
+	validates :email, uniqueness: true, :format => EMAIL_REGEX, if: 'email.present?'
 	validates :name, :presence => true
 	validates :password, :presence => true 
+	validates :facebook_id, uniqueness: true
 	#note:password is not in the usermodel, encrypted_password is.
 	before_save :encrypt_password, :ensure_authentication_token!
 	after_save :clear_password
@@ -53,6 +54,7 @@ class User < ActiveRecord::Base
 	    relationship.group_id = group.id
 	    relationship.user_id = self.id
 	    relationship.save
+	    group.update_attribute(:last_post_type,"add")
 	end
 
 

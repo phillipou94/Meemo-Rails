@@ -2,12 +2,10 @@ Rails.application.routes.draw do
   namespace :api do
 
     resources :users , only: [:index,:new,:create,:update,:show]
-    get "/posts" => "users#get_posts"
-
+    
     post "/login" => "sessions#login"
     get "/logout" => "sessions#logout"
     get "/current_user" => "api#current_user"
-
 
     resources :groups, only: [:create,:show]
     get "/groups/:id/users" => "groups#show_users"
@@ -19,6 +17,7 @@ Rails.application.routes.draw do
 
     resources :posts, only: [:create,:destroy]
     get "/posts/query" => "posts#search"
+    get "/posts" => "users#get_posts"
 
 
   end 

@@ -11,6 +11,7 @@ class Api::UsersController < Api::ApiController
 		      email: new_user.email,
 		      id: new_user.id,
 		      facebook_id: new_user.facebook_id,
+		      device_id: new_user.device_id,
 		      authentication_token: new_user.authentication_token
 		    }
 		    
@@ -60,7 +61,7 @@ class Api::UsersController < Api::ApiController
 	private
 
 	    def user_params 
-	      params.require("user").permit(:name,:password,:email)
+	      params.require("user").permit(:name,:password,:email, :facebook_id, :device_id)
 	    end 
 
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150419193626) do
+ActiveRecord::Schema.define(version: 20150420035524) do
 
   create_table "groups", force: :cascade do |t|
     t.string   "name"
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 20150419193626) do
     t.string   "authentication_token"
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
+    t.string   "device_id"
   end
 
 end
