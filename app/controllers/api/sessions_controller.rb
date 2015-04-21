@@ -8,6 +8,7 @@ class Api::SessionsController < Api::ApiController
     	user = User.find_by(email: user_email)
 	    if user && BCrypt::Engine.hash_secret(inputted_password, user.salt) == user.encrypted_password
 	    	render status: 200, json: {
+	    		status: 200,
 		        message:"Successfully Logged In",
 		        response: {
 		          name: user.name,
@@ -18,7 +19,7 @@ class Api::SessionsController < Api::ApiController
 		        
 		      }.to_json
 	    else
-	    	render json: { errors: "Invalid email or password" }, status: 406
+	    	render json: { status: 406, errors: "Invalid email or password" }, status: 406
 	    end
   	end
 
