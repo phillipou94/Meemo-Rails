@@ -18,7 +18,7 @@ class Api::SessionsController < Api::ApiController
 		        
 		      }.to_json
 	    else
-	    	render json: { errors: "Invalid email or password" }, status: 401
+	    	render json: { errors: "Invalid email or password" }, status: 406
 	    end
   	end
 
