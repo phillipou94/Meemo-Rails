@@ -5,6 +5,7 @@ class Api::UsersController < Api::ApiController
 		new_user = User.new(user_params)
 		if new_user.save
 		  render status: 200, json: {
+		  	status: 200,
 		    message:"New User Created",
 		    response: {
 		      name: new_user.name,
@@ -17,7 +18,8 @@ class Api::UsersController < Api::ApiController
 		    
 		  }.to_json
 		else
-		  render status: 500, json: {
+		  render status: 404, json: {
+		  	status: 404,
 		    errors: new_user.errors
 		  }.to_json
 		end
@@ -28,6 +30,7 @@ class Api::UsersController < Api::ApiController
 		user = User.find_by(id: params[:id])
 		if !user.blank?
 		  render status: 200, json: {
+		  	status: 200,
 		    message:"Found User",
 		    response: {
 		      name: user.name,
@@ -37,7 +40,8 @@ class Api::UsersController < Api::ApiController
 		    }
 		  }.to_json
 		else 
-		  render status: 500, json: {
+		  render status: 404, json: {
+		  	status: 404,
 		    errors: "Can't Find User"
 		  }.to_json
 		end 
@@ -46,11 +50,13 @@ class Api::UsersController < Api::ApiController
 	def get_posts
 		if @current_user
 			render status: 200, json: {
+				status: 200,
 				message: "Found Posts",
 				response: @current_user.posts
 			}.to_json
 		else 
-		  render status: 500, json: {
+		  render status: 404, json: {
+		  	status: 404,
 		    errors: "Not Logged In"
 		  }.to_json
 

@@ -21,6 +21,7 @@ module Api #what this module will be called
 		def current_user
 			if @current_user 
 				render status: 200, json: {
+					status: 200,
 			        message:"Logged In",
 			        response: {
 			          name: @current_user.name,
@@ -31,7 +32,8 @@ module Api #what this module will be called
 			        
 			      }.to_json
 			else 
-				render status: 500, json: {
+				render status: 401, json: {
+					status: 401,
         			errors: "Invalid Token"
       			}.to_json
 

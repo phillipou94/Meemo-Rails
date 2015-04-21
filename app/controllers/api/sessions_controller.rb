@@ -28,6 +28,7 @@ class Api::SessionsController < Api::ApiController
   			new_token = SecureRandom.urlsafe_base64(25).tr('lIO0', 'sxyz')
   			if @current_user.update_attribute(:authentication_token, new_token)
   				render status: 200, json: {
+  					status: 200,
 			        message:"Logout Successful",
 			        response: {
 			          name: @current_user.name,
@@ -38,11 +39,11 @@ class Api::SessionsController < Api::ApiController
 			        
 			    }.to_json
 			else 
-				render json: { errors: "Can't Logout" }, status: 422
+				render json: { status: 422, errors: "Can't Logout" }, status: 422
 
 			end 
 		else 
-			render json: { errors: "Can't Find User" }, status: 422
+			render json: { status: 422, errors: "Can't Find User" }, status: 422
 		end 
 		
   	end 

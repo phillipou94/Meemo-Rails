@@ -11,6 +11,7 @@ class Api::GroupsController < Api::ApiController
 	    	relationship.save
 		  end 	
 		  render status: 200, json: {
+		  	status: 200,
 		    message:"New Group Created",
 		    response: {
 		      id: new_group.id,
@@ -22,7 +23,8 @@ class Api::GroupsController < Api::ApiController
 		  
 
 		else
-		  render status: 500, json: {
+		  render status: 404, json: {
+		  	status: 404,
 		    errors: new_group.errors
 		  }.to_json
 		end
@@ -34,6 +36,7 @@ class Api::GroupsController < Api::ApiController
 		if group
 		  members = secure_users(group)	#ensures that tokens and salts don't get revealed
 		  render status: 200, json: {
+		  	status: 200,
 		    message:"Group Members",
 		    response: {
 		      id: group.id,
@@ -43,7 +46,8 @@ class Api::GroupsController < Api::ApiController
 		  }.to_json
 
 		else
-		  render status: 500, json: {
+		  render status: 404, json: {
+		  	status: 404,
 		    errors: "Can't Find Group"
 		  }.to_json
 		end
@@ -58,6 +62,7 @@ class Api::GroupsController < Api::ApiController
 			if !user_in_group?(user,group)
 				user.enter_group(group)
 				render status: 200, json: {
+					status: 200,
 			    	message:"Successfully Invited "+user.name+" to "+group.name,
 			    	response: {
 			      		id: group.id,
@@ -66,13 +71,15 @@ class Api::GroupsController < Api::ApiController
 			    
 			  	}.to_json
 			  else
-		  		render status: 500, json: {
+		  		render status: 401, json: {
+		  			status: 401,
 		    		errors: user.name+" is already in this group"
 		  		}.to_json
 		  	end 
 
 		else
-			render status: 500, json: {
+			render status: 404, json: {
+				status: 404,
 		    	errors: "Can't Find User Group Combination"
 		  	}.to_json
 		end 
@@ -86,6 +93,7 @@ class Api::GroupsController < Api::ApiController
 			if relationship
 				relationship.destroy
 				render status: 200, json: {
+					status: 200,
 			    	message:"Successfully Left Group: "+group.name,
 			    	response: {
 			      		id: group.id,
@@ -94,12 +102,14 @@ class Api::GroupsController < Api::ApiController
 			    
 			  	}.to_json
 			else 
-				render status: 500, json: {
+				render status: 401, json: {
+					status: 401,
 			    	errors: "Failed to Leave Group"
 			  	}.to_json
 			end 
 		else 
-			render status: 500, json: {
+			render status: 401, json: {
+				status: 401,
 			    errors: "Couldn't Find User Group Combination"
 			}.to_json
 		end 	
@@ -110,11 +120,13 @@ class Api::GroupsController < Api::ApiController
 		group = Group.find_by(id: params[:id])
 		if group
 			render status: 200, json: {
+				status: 200,
 		    	message:"Found Posts",
 		    	response: group.posts 
 			}.to_json
 		else 
-			render status: 500, json: {
+			render status: 404, json: {
+				status: 404,
 			    errors: "Couldn't Find Group"
 			}.to_json
 
@@ -134,6 +146,7 @@ class Api::GroupsController < Api::ApiController
 			end  
 			if user_ids.uniq.sort == people_ids.uniq.sort
 				render status: 200, json: {
+					status: 200,
 			    	message:"These People are in Group: "+group.name,
 			    	response: {
 			      		id: group.id,
@@ -147,6 +160,7 @@ class Api::GroupsController < Api::ApiController
 		end 
 
 		render status: 201, json: {
+			status: 201,
 	    	message:"These People Do Not Belong to an Existing Group"
 	  	}.to_json
 

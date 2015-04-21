@@ -9,6 +9,7 @@ class Api::FileUploaderController < ApplicationController
 	    obj = bucket.objects.create(name,data,{content_type:type,acl:"public_read"})
 	    url = obj.public_url().to_s
 	    render status: 200, json: {
+	    	status: 200,
 		    message:"Upload Successful",
 		    response: {
 		      url:url
