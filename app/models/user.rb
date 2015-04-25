@@ -50,11 +50,13 @@ class User < ActiveRecord::Base
 
   	'''GROUPS '''
   	def enter_group(group)
-	    relationship = UserGroup.new
-	    relationship.group_id = group.id
-	    relationship.user_id = self.id
-	    relationship.save
-	    group.update_attribute(:last_post_type,"add")
+  		if !group.users.include?(self)
+  			relationship = UserGroup.new
+		    relationship.group_id = group.id
+		    relationship.user_id = self.id
+		    relationship.save
+		    group.update_attribute(:last_post_type,"add")    
+		end 
 	end
 
 

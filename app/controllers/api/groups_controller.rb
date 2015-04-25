@@ -166,6 +166,41 @@ class Api::GroupsController < Api::ApiController
 
 	end 
 
+		#potentially slow performance
+
+	def get_groups_with_phone
+		phone_number = params[:phone]
+		if @current_user 
+			invitations = Invite.where(phone_number: phone_number)
+			if !invitations.empty?
+				invitations.each do |invite|
+					group = Group.find_by(id: invite.group_id)
+					if group
+						@current_user.enter_group(group)
+						invite.destroy
+					end 
+				end 
+				render status: 200, json: {
+					status: 200,
+				    message:"Successfully Joined Groups",
+				    response: @current_user.groups
+			    
+				  }.to_json
+
+			else 
+				render status: 201, json: {
+					status: 201,
+				    message:"No Invites Found"
+			    
+				  }.to_json
+
+
+			end 
+
+		end 
+
+	end 
+
 
 	private
 		def group_params
