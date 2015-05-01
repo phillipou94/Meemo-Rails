@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
 	EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
 	validates :email, uniqueness: true, :format => EMAIL_REGEX, if: 'email.present?'
 	validates :name, :presence => true
-	validates :password, :presence => true 
+	validates :password, :presence => true , if: 'facebook_id.blank?'
 	validates :facebook_id, uniqueness: true, if: 'facebook_id.present?'
 	#note:password is not in the usermodel, encrypted_password is.
 	before_save :encrypt_password, :ensure_authentication_token!
