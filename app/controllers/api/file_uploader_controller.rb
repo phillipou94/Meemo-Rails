@@ -8,11 +8,13 @@ class Api::FileUploaderController < ApplicationController
 	    name = ('a'..'z').to_a.shuffle[0..7].join + ".#{extension}"
 	    obj = bucket.objects.create(name,data,{content_type:type,acl:"public_read"})
 	    url = obj.public_url()
+	    url_string = url["scheme"]+"://"+url["host"]+"/"+name
+
 	    render status: 200, json: {
 	    	status: 200,
 		    message:"Upload Successful",
 		    response: {
-		      url:url
+		      url:url_string
 		    }
 		    
 		  }.to_json
