@@ -24,6 +24,7 @@ class Api::GroupsController < Api::ApiController
 		    response: {
 		      id: new_group.id,
 		      name: new_group.name,
+		      file_url: new_group.file_url,
 		      members: secure_users(new_group)
 		    }
 		    
@@ -213,7 +214,7 @@ class Api::GroupsController < Api::ApiController
 
 	private
 		def group_params
-			params.require("group").permit(:name)
+			params.require("group").permit(:name,:file_url)
 		end 
 
 		def secure_users(group)
