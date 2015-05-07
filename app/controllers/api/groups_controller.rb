@@ -43,6 +43,18 @@ class Api::GroupsController < Api::ApiController
 		end
 	end
 
+	def get_groups 
+		groups = @current_user.groups
+		render status: 200, json: {
+		  	status: 200,
+		    message:"Groups Found",
+		    response: groups
+		    
+		    
+		  }.to_json
+
+	end 
+
 	def show_users
 		group = Group.find_by(id: params[:id])
 		
