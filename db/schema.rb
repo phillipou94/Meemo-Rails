@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150503210848) do
+ActiveRecord::Schema.define(version: 20150511203120) do
 
   create_table "groups", force: :cascade do |t|
     t.string   "name"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20150503210848) do
     t.string   "file_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "user_name"
   end
 
   create_table "user_groups", force: :cascade do |t|

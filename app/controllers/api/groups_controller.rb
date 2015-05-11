@@ -3,16 +3,18 @@ class Api::GroupsController < Api::ApiController
 	def create
 		new_group = Group.new(group_params)
 		member_ids = params[:group][:user_ids] #include @current_user id
+		if !member_ids or member_ids = []
+			member_ids = [@current_user.id]
+		end 
 		facebook_ids = params[:group][:facebook_ids]
 		if new_group.save
-		  if member_ids
-			  member_ids.each do |user_id|
-			  	relationship = UserGroup.new
-		    	relationship.group_id = new_group.id
-		    	relationship.user_id = user_id
-		    	relationship.save
-			  end 
-			end 
+		  member_ids.each do |user_id|
+		  	relationship = UserGroup.new
+	    	relationship.group_id = new_group.id
+	    	relationship.user_id = user_id
+	    	relationship.save
+		  end 
+			
 		  if facebook_ids
 			  facebook_ids.each do |facebook_id|
 			  	user = User.find_by(facebook_id:facebook_id)

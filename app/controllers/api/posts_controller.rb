@@ -2,6 +2,7 @@ class Api::PostsController < Api::ApiController
 	def create
 		new_post = Post.new(post_params)
 		new_post.user_id = @current_user.id
+		new_post.user_name = @current_user.name
 		if new_post.save 
 			group = Group.find_by(id:new_post.group_id)
 			if group 
