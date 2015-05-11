@@ -1,6 +1,7 @@
 class Api::PostsController < Api::ApiController
 	def create
 		new_post = Post.new(post_params)
+		new_post.user_id = @current_user.id
 		if new_post.save 
 			group = Group.find_by(id:new_post.group_id)
 			if group 
@@ -52,7 +53,7 @@ class Api::PostsController < Api::ApiController
 
 	private
 		def post_params
-			params.require("post").permit(:post_type,:title,:content,:file_url,:user_id, :group_id)
+			params.require("post").permit(:post_type,:title,:content,:file_url, :group_id)
 		end 
 
 
