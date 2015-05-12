@@ -85,10 +85,11 @@ class Api::UsersController < Api::ApiController
 
 	def get_posts
 		if @current_user
+			posts = @current_user.posts.paginate(:page => params[:page], :per_page => 10)
 			render status: 200, json: {
 				status: 200,
 				message: "Found Posts",
-				response: @current_user.posts
+				response: posts
 			}.to_json
 		else 
 		  render status: 404, json: {
