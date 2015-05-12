@@ -2,6 +2,13 @@ module Api #what this module will be called
 	class ApiController < ApplicationController 
 		respond_to :json
 		before_filter :authenticate_user_from_token!
+		skip_before_filter :authenticate_user_from_token!, :only => [:wake_up]
+
+		def wake_up
+			render status: 200, json: {
+        		message: "Server Awake"
+      		}.to_json
+		end 
 
 		def authenticate_user_from_token!
 		    user_auth_token = request.headers["API-TOKEN"].presence	#this will require tokens on headers

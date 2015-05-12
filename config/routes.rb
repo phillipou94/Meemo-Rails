@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   namespace :api do
 
+    get "/wake_up" => "api#wake_up"
+
     resources :users , only: [:index,:new,:create,:update,:show]
     post "/login/fb" => "users#facebook_login"
     
