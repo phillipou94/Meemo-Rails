@@ -146,10 +146,11 @@ class Api::GroupsController < Api::ApiController
 	def get_posts
 		group = Group.find_by(id: params[:id])
 		if group
+			posts = group.posts.paginate(:page => params[:page], :per_page => 10)
 			render status: 200, json: {
 				status: 200,
 		    	message:"Found Posts",
-		    	response: group.posts 
+		    	response: posts 
 			}.to_json
 		else 
 			render status: 404, json: {
