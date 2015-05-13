@@ -85,7 +85,7 @@ class Api::UsersController < Api::ApiController
 
 	def get_posts
 		if @current_user
-			posts = @current_user.posts.paginate(:page => params[:page], :per_page => 10)
+			posts = @current_user.posts.paginate(:page => params[:page], :per_page => 10).order('created_at DESC')
 			render status: 200, json: {
 				status: 200,
 				message: "Found Posts",

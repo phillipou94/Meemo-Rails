@@ -146,7 +146,7 @@ class Api::GroupsController < Api::ApiController
 	def get_posts
 		group = Group.find_by(id: params[:id])
 		if group
-			posts = group.posts.paginate(:page => params[:page], :per_page => 10)
+			posts = group.posts.paginate(:page => params[:page], :per_page => 10).order('created_at DESC')
 			render status: 200, json: {
 				status: 200,
 		    	message:"Found Posts",
