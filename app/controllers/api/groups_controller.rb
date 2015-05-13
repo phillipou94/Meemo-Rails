@@ -46,7 +46,7 @@ class Api::GroupsController < Api::ApiController
 	end
 
 	def get_groups 
-		groups = @current_user.groups
+		groups = @current_user.groups.order('updated_at DESC')
 		render status: 200, json: {
 		  	status: 200,
 		    message:"Groups Found",
