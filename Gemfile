@@ -27,6 +27,7 @@ gem 'rename'
 
 gem 'aws-sdk', '~> 1'
 gem "figaro"	#for storing secure keys and env variables
+gem 'will_paginate'
 
 group :production do
   gem 'pg'
