@@ -47,13 +47,7 @@ class Api::GroupsController < Api::ApiController
 
 	def get_groups 
 		groups = @current_user.groups
-		render status: 200, json: {
-		  	status: 200,
-		    message:"Groups Found",
-		    response: groups
-		    
-		    
-		  }.to_json
+		render_groups(groups)
 
 	end 
 
@@ -146,6 +140,8 @@ class Api::GroupsController < Api::ApiController
 	def get_posts
 		group = Group.find_by(id: params[:id])
 		if group
+			relationship = group.user_groups.find_by(user_id:@current_user.id)
+			relationship.update_attribute("visited_at",DateTime.now)
 			posts = group.posts.paginate(:page => params[:page], :per_page => 10).order('created_at DESC')
 			render status: 200, json: {
 				status: 200,
@@ -245,8 +241,36 @@ class Api::GroupsController < Api::ApiController
 			return members
 		end 
 
+		def render_groups(groups)
+			result = Array.new
+			groups.each do |group|
+				updated_at = group.updated_at
+				relationship = group.user_groups.find_by(user_id:@current_user.id)
+				visited_at = relationship.updated_at
+				has_seen = seen_last_post(updated_at,visited_at)
+				group_hash = group.attributes
+				group_hash["seen_last_post"] = has_seen
+				group_hash["visited_at"] = relationship.updated_at
+				result.push(group_hash)
+			end 
+			render status: 200, json: {
+			  	status: 200,
+			    message:"Groups Found",
+			    response: result
+		  	}.to_json()
+
+		end 
+
 		def user_in_group?(user,group)
 			return UserGroup.where(:user_id=>user.id).where(:group_id=>group.id).any?
+		end 
+
+		def seen_last_post(updated_at,visited_at)
+			if visited_at.nil?
+				return false
+			end 
+			#account for one second latency
+			return visited_at - 1.seconds > updated_at
 		end 
 
 
