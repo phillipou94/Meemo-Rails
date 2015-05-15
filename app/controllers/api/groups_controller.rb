@@ -141,7 +141,7 @@ class Api::GroupsController < Api::ApiController
 		group = Group.find_by(id: params[:id])
 		if group
 			relationship = group.user_groups.find_by(user_id:@current_user.id)
-			relationship.update_attribute("visited_at",DateTime.now)
+			relationship.touch
 			posts = group.posts.paginate(:page => params[:page], :per_page => 10).order('created_at DESC')
 			render status: 200, json: {
 				status: 200,
