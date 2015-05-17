@@ -8,6 +8,7 @@ class Api::InvitesController < Api::ApiController
 			new_invite.phone_number = person[:phone]
 			new_invite.name = person[:name]
 			new_invite.save
+			
 		end 
 
 		render status: 200, json: {
