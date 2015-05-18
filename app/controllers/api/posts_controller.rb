@@ -6,7 +6,7 @@ class Api::PostsController < Api::ApiController
 		if new_post.save 
 			group = Group.find_by(id:new_post.group_id)
 			if group 
-				group.update_attribute(:last_post_type,new_post.post_type)
+				group.update_attributes(:last_post_type => new_post.post_type,:last_post_user_name => @current_user.name)
 			end 
 			render status: 200, json: {
 				status: 200,
