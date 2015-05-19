@@ -4,10 +4,37 @@ class Api::PostsController < Api::ApiController
 		new_post.user_id = @current_user.id
 		new_post.user_name = @current_user.name
 		if new_post.save 
-			group = Group.find_by(id:new_post.group_id)
-			if group 
-				group.update_attributes(:last_post_type => new_post.post_type,:last_post_user_name => @current_user.name)
+			if new_post.group_id
+				group = Group.find_by(id:new_post.group_id)
+				if group 
+					group.update_attributes(:last_post_type => new_post.post_type,:last_post_user_name => @current_user.name)
+					group.users.each do |user|
+						relationship = PostUser.new
+						relationship.post_id = new_post.id
+						relationship.user_id = user.id
+						relationship.save
+					end 
+				end 
 			end 
+			facebook_ids = params[:post][:facebook_ids]
+			if facebook_ids
+				facebook_ids.each do |facebook_id|
+					user = User.find_by(facebook_id:facebook_id)
+					if user
+						relationship = PostUser.new
+						relationship.post_id = new_post.id
+						relationship.user_id = user.id
+						relationship.save
+					end
+				end 
+			end
+
+			relationship = PostUser.new
+			relationship.post_id = new_post.id
+			relationship.user_id = @current_user.id
+			relationship.save 
+
+
 			render status: 200, json: {
 				status: 200,
 			    message:"Successfully Posted",
