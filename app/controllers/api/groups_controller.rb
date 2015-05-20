@@ -48,7 +48,6 @@ class Api::GroupsController < Api::ApiController
 	def get_groups 
 		groups = @current_user.groups.sort_by(&:updated_at).reverse
 		render_groups(groups)
-
 	end 
 
 	def show_users
