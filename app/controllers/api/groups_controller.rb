@@ -204,23 +204,25 @@ class Api::GroupsController < Api::ApiController
 						@current_user.enter_group(group)
 						invite.destroy
 					end 
-				end 
-				render status: 200, json: {
-					status: 200,
-				    message:"Successfully Joined Groups",
-				    response: @current_user.groups
-			    
-				  }.to_json
-
-			else 
-				render status: 201, json: {
-					status: 201,
-				    message:"No Invites Found"
-			    
-				  }.to_json
-
-
-			end 
+				end
+			end  
+			post_invites = PostInvite.where(:phone_number => [phone_number,number_with_country_code])
+			if !post_invites.empty?
+				post_invites.each do |invite|
+					post = Post.find_by(id: invite.post_id)
+					if post
+						@current_user.retrieve_post(post)
+						invite.destroy
+					end 
+				end
+			end  
+			render status: 200, json: {
+				status: 200,
+			    message:"Successfully Joined Groups and Found Posts",
+			    groups: @current_user.groups,
+			    posts: @current_user.posts
+		    
+			  }.to_json 
 
 		end 
 

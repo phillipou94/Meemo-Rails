@@ -60,5 +60,14 @@ class User < ActiveRecord::Base
 		end 
 	end
 
+	''' Posts'''
+
+	def retrieve_post(post)
+		relationship = PostUser.new
+		relationship.post_id = post.id
+		relationship.user_id = self.id
+		relationship.save
+	end 
+
 
 end

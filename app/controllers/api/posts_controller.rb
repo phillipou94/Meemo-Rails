@@ -34,6 +34,9 @@ class Api::PostsController < Api::ApiController
 			relationship.user_id = @current_user.id
 			relationship.save 
 
+			numbers = params[:post][:phone_numbers]
+			invite_users(numbers,new_post)
+
 
 			render status: 200, json: {
 				status: 200,
@@ -47,6 +50,19 @@ class Api::PostsController < Api::ApiController
 		    errors: new_post.errors
 		  }.to_json
 		end 
+	end 
+
+	def invite_users(people,post)
+		if people
+			people.each do |person|
+				invite = PostInvite.new
+				invite.phone_number = person[:phone]
+				invite.name = person[:name]
+				invite.post_id = post.id
+				invite.save
+			end 
+		end
+
 	end 
 
 	def destroy
