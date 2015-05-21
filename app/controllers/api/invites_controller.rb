@@ -3,12 +3,11 @@ class Api::InvitesController < Api::ApiController
 		people = params[:invite][:people]
 		group_id = params[:invite][:group_id]
 		people.each do |person|
-			new_invite = Invite.new
-			new_invite.group_id = group_id
-			new_invite.phone_number = person[:phone]
-			new_invite.name = person[:name]
-			new_invite.save
-			
+			phone = get_phone_model(person[:phone])
+			relationship = PhoneGroup.new
+			relationship.group_id = group_id
+			relationship.phone_id = phone.id
+			relationship.save
 		end 
 
 		render status: 200, json: {
@@ -19,5 +18,28 @@ class Api::InvitesController < Api::ApiController
 		  }.to_json
 
 	end 
+
+	def get_phone_model(number)
+		phone = Phone.find_by(number:number)
+		if phone.nil? 
+			new_phone = Phone.new
+			new_phone.number = number
+			new_phone.access_code = generate_access_code
+			new_phone.save
+			return new_phone
+		else 
+			return phone
+		end 
+	end
+
+	def generate_access_code
+	    options = "0123456789".split("")
+	    result = ""
+	    for i in 0..5
+	        result += options.sample
+	    end
+	    
+	    return result
+	end  
 
 end

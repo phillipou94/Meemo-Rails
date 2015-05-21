@@ -18,7 +18,7 @@ Rails.application.routes.draw do
     post "/groups/check" => "groups#get_group_from_people"
     post "/upload_file" => "file_uploader#upload"
     get "/groups" => "groups#get_groups"
-    get "/phone" => "groups#get_groups_with_phone"
+    get "/code" => "groups#get_groups_with_code"
 
     resources :posts, only: [:create,:destroy]
     get "/posts/query" => "posts#search"

@@ -8,7 +8,7 @@ class Api::GroupsController < Api::ApiController
 		end 
 		facebook_ids = params[:group][:facebook_ids]
 		if new_group.save
-		  member_ids.each do |user_id|
+		    member_ids.each do |user_id|
 		  	relationship = UserGroup.new
 	    	relationship.group_id = new_group.id
 	    	relationship.user_id = user_id
@@ -191,37 +191,33 @@ class Api::GroupsController < Api::ApiController
 
 		#potentially slow performance
 
-	def get_groups_with_phone
-		phone_number = params[:phone]
-		number_with_country_code = "1"+phone_number
+	def get_groups_with_code
+		code = params[:code]
 		if @current_user 
-			invitations = Invite.where(:phone_number => [phone_number,number_with_country_code])
-			if !invitations.empty?
-				invitations.each do |invite|
-					group = Group.find_by(id: invite.group_id)
-					if group
-						@current_user.enter_group(group)
-						invite.destroy
-					end 
-				end
-			end  
-			post_invites = PostInvite.where(:phone_number => [phone_number,number_with_country_code])
-			if !post_invites.empty?
-				post_invites.each do |invite|
-					post = Post.find_by(id: invite.post_id)
-					if post
-						@current_user.retrieve_post(post)
-						invite.destroy
-					end 
-				end
-			end  
+			phone = Phone.where(:access_code => [code]).first
+			groups = phone.groups 
+			posts = phone.posts
+			if !groups.empty?
+				groups.each do |group|
+					relationship = UserGroup.new
+					relationship.user_id = @current_user.id
+					relationship.group_id = group.id
+				end 
+			end 
+			if !posts.empty?
+				posts.each do |post|
+					relationship = PostUser.new
+					relationship.user_id = @current_user.id
+					relationship.post_id = post.id
+				end 
+			end 
+			phone.destroy 
 			render status: 200, json: {
 				status: 200,
 			    message:"Successfully Joined Groups and Found Posts",
 			    groups: @current_user.groups,
 			    posts: @current_user.posts
-		    
-			  }.to_json 
+			}.to_json 
 
 		end 
 

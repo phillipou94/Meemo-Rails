@@ -53,13 +53,13 @@ class Api::PostsController < Api::ApiController
 	end 
 
 	def invite_users(people,post)
-		if people
+		if people 
 			people.each do |person|
-				invite = PostInvite.new
-				invite.phone_number = person[:phone]
-				invite.name = person[:name]
-				invite.post_id = post.id
-				invite.save
+				phone = get_phone_model(person[:phone])
+				relationship = PhonePost.new
+				relationship.post_id = post.id
+				relationship.phone_id = phone.id
+				relationship.save
 			end 
 		end
 
@@ -98,7 +98,30 @@ class Api::PostsController < Api::ApiController
 	private
 		def post_params
 			params.require("post").permit(:post_type,:title,:content,:file_url, :group_id)
-		end 
+		end
+
+		def get_phone_model(number)
+			phone = Phone.find_by(number:number)
+			if phone.nil? 
+				new_phone = Phone.new
+				new_phone.number = number
+				new_phone.access_code = generate_access_code
+				new_phone.save
+				return new_phone
+			else 
+				return phone
+			end 
+		end
+
+		def generate_access_code
+		    options = "0123456789".split("")
+		    result = ""
+		    for i in 0..5
+		        result += options.sample
+		    end
+		    
+		    return result
+		end   
 
 
 end
