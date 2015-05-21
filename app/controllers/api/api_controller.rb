@@ -27,6 +27,8 @@ module Api #what this module will be called
 
 		def current_user
 			if @current_user 
+				posts_count = @current_user.posts.length
+				groups_count = @current_user.groups.length
 				render status: 200, json: {
 					status: 200,
 			        message:"Logged In",
@@ -34,6 +36,8 @@ module Api #what this module will be called
 			          name: @current_user.name,
 			          email: @current_user.email,
 			          id: @current_user.id,
+			          groups_count: groups_count,
+			          posts_count: posts_count,
 			          authentication_token: @current_user.authentication_token
 			        }
 			        
