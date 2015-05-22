@@ -248,6 +248,7 @@ class Api::GroupsController < Api::ApiController
 				group_hash = group.attributes
 				group_hash["seen_last_post"] = has_seen
 				group_hash["visited_at"] = relationship.updated_at
+				group_hash["number_of_memories"] = group.posts.count
 				result.push(group_hash)
 			end 
 			render status: 200, json: {
