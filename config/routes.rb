@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     resources :posts, only: [:create,:destroy]
     get "/posts/query" => "posts#search"
     get "/posts" => "users#get_posts"
+    post "/posts/:id/hide" => "posts#hide_post"
 
     post "/phone_invite" => "invites#invite"
 

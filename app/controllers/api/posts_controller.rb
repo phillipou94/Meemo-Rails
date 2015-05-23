@@ -68,6 +68,12 @@ class Api::PostsController < Api::ApiController
 	def destroy
 		post = Post.find_by(id: params[:id])
 		if post.destroy
+			#delete from AWS
+			if post.file_url
+				s3 = AWS::S3.new(:access_key_id => ENV['S3_KEY'],:secret_access_key => ENV['S3_SECRET'])
+		    	file = s3.buckets['meemo-photos'].objects[post.file_url]
+				file.delete()
+			end 
 			render status: 200, json: {
 				status: 200,
 		    	message:"Post Destroyed"
@@ -78,6 +84,27 @@ class Api::PostsController < Api::ApiController
 				status: 404,
 		    	errors: post.errors
 		  	}.to_json
+		end 
+
+	end 
+
+	def hide_post
+		post = Post.find_by(id:params[:id])
+		if post
+			relationship = PostUser.where(:user_id =>@current_user.id).where(:post_id=>post.id).first
+			if relationship.destroy
+				render status: 200, json: {
+					status: 200,
+			    	message:"Hidden"
+			    
+			  	}.to_json
+			else
+				render status: 404, json: {
+					status: 404,
+			    	errors: post.errors
+			  	}.to_json 
+
+		  	end
 		end 
 
 	end 

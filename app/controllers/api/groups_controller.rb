@@ -232,7 +232,7 @@ class Api::GroupsController < Api::ApiController
 		def secure_users(group)
 			members = Array.new
 			group.users.each do |user|
-			  	secure_user = {:name => user.name,:id => user.id}
+			  	secure_user = {:name => user.name,:id => user.id, :facebook_id => user.facebook_id}
 			  	members.push(secure_user)
 			end 
 			return members
