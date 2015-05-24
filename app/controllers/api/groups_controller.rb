@@ -49,6 +49,13 @@ class Api::GroupsController < Api::ApiController
 		file_url = params[:file_url]
 		if !file_url 
 			file_url = group.file_url
+		else 
+			#delete old picture of group
+			if group.file_url
+				s3 = AWS::S3.new(:access_key_id => ENV['S3_KEY'],:secret_access_key => ENV['S3_SECRET'])
+		    	file = s3.buckets['meemo-photos'].objects[group.file_url]
+				file.delete()
+			end 
 		end 
 		if group.update_attributes(:name => name, :file_url => file_url)
 			render status: 200, json: {
