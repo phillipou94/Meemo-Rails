@@ -19,12 +19,12 @@ Rails.application.routes.draw do
     post "/upload_file" => "file_uploader#upload"
     get "/groups" => "groups#get_groups"
     get "/code" => "groups#get_groups_with_code"
+    put "/groups/:id/edit" => "groups#edit"
 
     resources :posts, only: [:create,:destroy]
     get "/posts/query" => "posts#search"
     get "/posts" => "users#get_posts"
     post "/posts/:id/hide" => "posts#hide_post"
-
     post "/phone_invite" => "invites#invite"
 
 

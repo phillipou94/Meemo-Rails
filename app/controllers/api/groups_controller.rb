@@ -35,8 +35,6 @@ class Api::GroupsController < Api::ApiController
 		    }
 		    
 		  }.to_json
-		  
-
 		else
 		  render status: 404, json: {
 		  	status: 404,
@@ -44,6 +42,25 @@ class Api::GroupsController < Api::ApiController
 		  }.to_json
 		end
 	end
+
+	def edit
+		group = Group.find_by(id:params[:id])
+		name = params[:group][:name]
+		file_url = params[:group][:file_url]
+		if group.update_attributes(:name => name, :file_url => file_url)
+			render status: 200, json: {
+		  	status: 200,
+		    message:"New Group Created",
+		    response: group
+		  }.to_json
+		else 
+		  	render status: 404, json: {
+			  	status: 404,
+			    errors: new_group.errors
+			}.to_json
+
+		end 
+	end 
 
 	def get_groups 
 		groups = @current_user.groups.sort_by(&:updated_at).reverse
