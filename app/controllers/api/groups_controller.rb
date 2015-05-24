@@ -47,6 +47,9 @@ class Api::GroupsController < Api::ApiController
 		group = Group.find_by(id:params[:id])
 		name = params[:name]
 		file_url = params[:file_url]
+		if !file_url 
+			file_url = group.file_url
+		end 
 		if group.update_attributes(:name => name, :file_url => file_url)
 			render status: 200, json: {
 		  	status: 200,
