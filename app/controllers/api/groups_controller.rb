@@ -45,8 +45,8 @@ class Api::GroupsController < Api::ApiController
 
 	def edit
 		group = Group.find_by(id:params[:id])
-		name = params[:group][:name]
-		file_url = params[:group][:file_url]
+		name = params[:name]
+		file_url = params[:file_url]
 		if group.update_attributes(:name => name, :file_url => file_url)
 			render status: 200, json: {
 		  	status: 200,
