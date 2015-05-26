@@ -28,6 +28,7 @@ gem 'rename'
 gem 'aws-sdk', '~> 1'
 gem "figaro"	#for storing secure keys and env variables
 gem 'will_paginate'
+gem 'twilio-ruby', '~> 4.1.0'
 
 group :production do
   gem 'pg'

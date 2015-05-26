@@ -1,3 +1,4 @@
+require 'twilio-ruby' 
 module Api #what this module will be called
 	class ApiController < ApplicationController 
 		respond_to :json

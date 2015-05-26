@@ -237,8 +237,7 @@ class Api::GroupsController < Api::ApiController
 					relationship.user_id = @current_user.id
 					relationship.post_id = post.id
 				end 
-			end 
-			phone.destroy 
+			end  
 			render status: 200, json: {
 				status: 200,
 			    message:"Successfully Joined Groups and Found Posts",
